@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import People, Project, Issue
+from .models import People, Project, Issue, SoftDeleteQuerySet
 
 class ProjectsInline(admin.TabularInline):
   model = Project
@@ -14,7 +14,8 @@ class IssuesInline(admin.TabularInline):
 
 
 class PeopleAdmin(admin.ModelAdmin):
-  list_display = ('user', 'id')
+
+  list_display = ('user', 'id', 'deleted')
   readonly_fields = ['user']
   inlines = [ProjectsInline]
 

@@ -10,14 +10,14 @@ class SoftDeleteQuerySet(models.QuerySet):
 class SoftDeleteManager(models.Manager):
   use_for_related_fields = True
 
-  def with_deleted(self):
-    return SoftDeleteQuerySet(self.model, using=self._db)
+  def only_active(self):
+    return self.with_deleted().exclude(deleted=True)
 
   def deleted(self):
     return self.with_deleted().filter(deleted=True)
 
   def get_queryset(self):
-    return self.with_deleted().exclude(deleted=True)
+    return SoftDeleteQuerySet(self.model, using=self._db)
 
 
 class SoftDeleteModel(models.Model):
@@ -32,10 +32,14 @@ class SoftDeleteModel(models.Model):
     self.deleted = True
     self.save()
 
+  def restore(self):
+    self.deleted = False
+    self.save()
+
   objects = SoftDeleteManager()
 
-# Employee.objects.all()           # will only return objects that haven't been 'deleted'
-# Employee.objects.with_deleted()  # gives you all, including deleted
+# Employee.objects.all()           # will only return all, including deleted
+# Employee.objects.only_active()   # gives you only NOT deleted
 # Employee.objects.deleted()       # gives you only deleted objects
 
 class Project(SoftDeleteModel):
@@ -44,7 +48,7 @@ class Project(SoftDeleteModel):
   target_end = models.DateField('Target end date')
   actual_end = models.DateField('Actual end date', null=True, blank=True)
   created_on = models.DateField('Creation date', auto_now_add=True)
-  created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+  created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT)
   assigned_to = models.ForeignKey('People', null=True, blank=True, on_delete=models.SET_NULL, related_name='owner')
 
   def __str__(self):
@@ -58,17 +62,19 @@ class People(SoftDeleteModel):
     return self.user.username
 
   class Meta:
-    verbose_name = 'People'
+    verbose_name = 'Person'
     verbose_name_plural = 'People'
 
+  def show_deleted(self):
+    return self.objects.deleted()
 
 class Issue(SoftDeleteModel):
   summary = models.CharField('Issue summary', max_length=255)
   description = models.TextField('Description', null=True)
-  identified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='troubleshooter')
+  identified_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='troubleshooter')
   identification_date = models.DateField('Identified on', auto_now_add=True)
-  related_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True)
-  assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='issue_solver', blank=True)
+  related_project = models.ForeignKey(Project, on_delete=models.PROTECT, null=True)
+  assigned_to = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='issue_solver', blank=True)
 
   PIORITY_LIST = (
     ('l', 'Low'),
@@ -83,7 +89,7 @@ class Issue(SoftDeleteModel):
   actual_resolution = models.DateField('Actual resolution', null=True, blank=True)
   res_summary = models.TextField('Resolution summary', null=True, blank=True)
   created_on = models.DateField('Creation date', auto_now_add=True)
-  created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name='creator')
+  created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT, related_name='creator')
 
   def resolved(self):
     if self.actual_resolution is None:
