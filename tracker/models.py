@@ -2,7 +2,43 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-class Project(models.Model):
+class SoftDeleteQuerySet(models.QuerySet):
+  def delete(self):
+    self.update(deleted=True)
+
+
+class SoftDeleteManager(models.Manager):
+  use_for_related_fields = True
+
+  def with_deleted(self):
+    return SoftDeleteQuerySet(self.model, using=self._db)
+
+  def deleted(self):
+    return self.with_deleted().filter(deleted=True)
+
+  def get_queryset(self):
+    return self.with_deleted().exclude(deleted=True)
+
+
+class SoftDeleteModel(models.Model):
+  """ 
+  Sets `deleted` state of model instead of deleting it
+  """
+  deleted = models.BooleanField(editable=False, default=False)  # NullBooleanField for faster migrations with Postgres if changing existing models
+  class Meta:
+    abstract = True
+
+  def delete(self):
+    self.deleted = True
+    self.save()
+
+  objects = SoftDeleteManager()
+
+# Employee.objects.all()           # will only return objects that haven't been 'deleted'
+# Employee.objects.with_deleted()  # gives you all, including deleted
+# Employee.objects.deleted()       # gives you only deleted objects
+
+class Project(SoftDeleteModel):
   project_name = models.CharField('Project name', max_length=200)
   start_date = models.DateField('Start date')
   target_end = models.DateField('Target end date')
@@ -15,8 +51,8 @@ class Project(models.Model):
     return self.project_name
     
 
-class People(models.Model):
-  user = models.OneToOneField(User, on_delete=models.PROTECT)
+class People(SoftDeleteModel):
+  user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True)
 
   def __str__(self):
     return self.user.username
@@ -26,7 +62,7 @@ class People(models.Model):
     verbose_name_plural = 'People'
 
 
-class Issue(models.Model):
+class Issue(SoftDeleteModel):
   summary = models.CharField('Issue summary', max_length=255)
   description = models.TextField('Description', null=True)
   identified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='troubleshooter')
