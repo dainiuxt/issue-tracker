@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-
 class Project(models.Model):
   project_name = models.CharField('Project name', max_length=200)
   start_date = models.DateField('Start date')
@@ -10,14 +9,14 @@ class Project(models.Model):
   actual_end = models.DateField('Actual end date', null=True, blank=True)
   created_on = models.DateField('Creation date', auto_now_add=True)
   created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+  assigned_to = models.ForeignKey('People', null=True, blank=True, on_delete=models.SET_NULL, related_name='owner')
 
   def __str__(self):
     return self.project_name
     
 
 class People(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  assigned_project = models.ManyToManyField(Project, help_text='Assign project(s)')
+  user = models.OneToOneField(User, on_delete=models.PROTECT)
 
   def __str__(self):
     return self.user.username
@@ -25,6 +24,7 @@ class People(models.Model):
   class Meta:
     verbose_name = 'People'
     verbose_name_plural = 'People'
+
 
 class Issue(models.Model):
   summary = models.CharField('Issue summary', max_length=255)
