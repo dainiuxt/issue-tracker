@@ -4,13 +4,16 @@ from .models import People, Project, Issue, SoftDeleteQuerySet
 class ProjectsInline(admin.TabularInline):
   model = Project
   extra = 0
-  list_display = ['project_name', 'start_date', 'target_end']
+  fields = ('project_name', 'start_date', 'target_end')
+  list_display = ('project_name', 'start_date', 'target_end')
   readonly_fields = ['project_name']
 
 class IssuesInline(admin.TabularInline):
   model = Issue
   extra = 0
   can_delete = False
+  fields = ('summary', 'description', 'priority', 'target_resolution')
+  list_display = ['summary', 'description', 'priority', 'target_resolution']
 
 
 class PeopleAdmin(admin.ModelAdmin):
@@ -29,6 +32,7 @@ class IssueAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
   list_display = ('project_name', 'created_on', 'created_by')
   inlines = [IssuesInline]
+
   def save_model(self, request, obj, form, change):
     obj.created_by = request.user
     super().save_model(request, obj, form, change) 
