@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+# from simple_history.models import HistoricalRecords
 
 class SoftDeleteQuerySet(models.QuerySet):
   def delete(self):
@@ -50,6 +51,7 @@ class Project(SoftDeleteModel):
   created_on = models.DateField('Creation date', auto_now_add=True)
   created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT)
   assigned_to = models.ForeignKey('People', null=True, blank=True, on_delete=models.SET_NULL, related_name='owner')
+  # history = HistoricalRecords()
 
   def __str__(self):
     return self.project_name
@@ -90,6 +92,7 @@ class Issue(SoftDeleteModel):
   res_summary = models.TextField('Resolution summary', null=True, blank=True)
   created_on = models.DateField('Creation date', auto_now_add=True)
   created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT, related_name='creator')
+  # history = HistoricalRecords()
 
   def resolved(self):
     if self.actual_resolution is None:

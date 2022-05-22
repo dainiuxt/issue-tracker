@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse("Labas, pasauli!")
+    return render(request, 'index.html')
 
 
 @login_required
