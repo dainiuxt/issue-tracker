@@ -55,7 +55,15 @@ class Project(SoftDeleteModel):
 
   def __str__(self):
     return self.project_name
-    
+
+  def pr_issues(self):
+    issues = Issue.objects.filter(related_project=self.id)
+    return issues
+
+  def resolved_issues(self):
+    issues = Issue.objects.filter(related_project=self.id).filter(actual_resolution=None)
+    return issues 
+  
 
 class People(SoftDeleteModel):
   user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True)
