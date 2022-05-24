@@ -62,6 +62,40 @@
             </div>
             <div class="row">
                 <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Stats</h4>
+                        </div>
+                        <div class="card-body px-3 py-4-5">
+                            <div id="piechart"></div>
+                        </div>
+                    </div>
+                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                    <script type="text/javascript">
+                        // Load google charts
+                        google.charts.load('current', {'packages':['corechart']});
+                        google.charts.setOnLoadCallback(drawChart);
+                        
+                        // Draw the chart and set the chart values
+                        function drawChart() {
+                          var data = google.visualization.arrayToDataTable([
+                          ['Issue', 'Status'],
+                          ['Closed', {{ issues_solved|safe }}],
+                          ['Open', {{ issues_active|length|safe }}],
+                        ]);
+                        
+                          // Optional; add a title and set the width and height of the chart
+                          var options = {'height':400};
+                        
+                          // Display the chart inside the <div> element with id="piechart"
+                          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                          chart.draw(data, options);
+                        }
+                    </script> 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
                     {% for p in projects %}
                         <div class="card">
                             <div class="card-header">
@@ -201,11 +235,11 @@
                 <div class="card-body py-4 px-5">
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-xl">
-                            <img src="assets/images/faces/1.jpg" alt="Face 1">
+                            <img src="{% static 'assets/images/faces/1.jpg' %}" alt="Face 1">
                         </div>
                         <div class="ms-3 name">
-                            <h5 class="font-bold">John Duck</h5>
-                            <h6 class="text-muted mb-0">@johnducky</h6>
+                            <h5 class="font-bold">{{ request.user.username }}</h5>
+                            <h6 class="text-muted mb-0">@{{ request.user.username }}</h6>
                         </div>
                     </div>
                 </div>
