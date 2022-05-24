@@ -60,7 +60,7 @@ class Project(SoftDeleteModel):
     issues = Issue.objects.filter(related_project=self.id)
     return issues
 
-  def resolved_issues(self):
+  def unresolved_issues(self):
     issues = Issue.objects.filter(related_project=self.id).filter(actual_resolution=None)
     return issues 
   

@@ -12,8 +12,8 @@ class IssuesInline(admin.TabularInline):
   model = Issue
   extra = 0
   can_delete = False
-  fields = ('summary', 'description', 'priority', 'target_resolution')
-  list_display = ['summary', 'description', 'priority', 'target_resolution']
+  fields = ('summary', 'description', 'priority', 'target_resolution', 'actual_resolution')
+  list_display = ['summary', 'description', 'priority', 'target_resolution', 'actual_resolution']
 
 
 class PeopleAdmin(admin.ModelAdmin):
