@@ -64,11 +64,21 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Stats</h4>
+                            <h4>Issues stats</h4>
                         </div>
                         <div class="card-body px-3 py-4-5">
                             {% autoescape off %}
-                                {{ plot_div }}
+                                {{ issues_plot_div }}
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Project stats</h4>
+                        </div>
+                        <div class="card-body px-3 py-4-5">
+                            {% autoescape off %}
+                                {{ projects_plot_div }}
                             {% endautoescape %}
                         </div>
                     </div>
