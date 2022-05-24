@@ -12,10 +12,10 @@ class SoftDeleteManager(models.Manager):
   use_for_related_fields = True
 
   def only_active(self):
-    return self.with_deleted().exclude(deleted=True)
+    return self.all().exclude(deleted=True)
 
   def deleted(self):
-    return self.with_deleted().filter(deleted=True)
+    return self.only_active().filter(deleted=True)
 
   def get_queryset(self):
     return SoftDeleteQuerySet(self.model, using=self._db)

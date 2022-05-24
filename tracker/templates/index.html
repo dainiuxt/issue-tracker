@@ -1,50 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-      <!-- <div class="page-content">
-        <section class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Project list</h4>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        {% for p in projects %}
-                            <li>{{p.project_name}} has {{p.pr_issues|length}} issues {{p.unresolved_issues|length}} of which are unresolved.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Issues</h4>
-                </div>
-                <div class="card-body">
-
-                    <ul>
-                        {% for i in issues %}
-                            <li>{{i.summary}}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Solvers</h4>
-                </div>
-                <div class="card-body">
-
-                    <ul>
-                        {% for p in people %}
-                            <li>{{p.user.username}}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </section>
-      </div>
-  </div> -->
-
 <div class="page-heading">
     <h3>Issue tracker dashboard</h3>
 </div>
@@ -106,34 +62,22 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <!-- <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Project list</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                {% for p in projects %}
-                                    <li>{{p.project_name}} has {{p.pr_issues|length}} issues {{p.unresolved_issues|length}} of which are unresolved.</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div> -->
                     {% for p in projects %}
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{p.project_name}}</h4>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{p.project_name}}</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item active">Active issues: {{p.unresolved_issues|length}}</li>
+                                    {% if p.unresolved_issues %}
+                                        {% for i in p.unresolved_issues %}
+                                            <li class="list-group-item">{{ i.summary }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <li class="list-group-item active">Active issues: {{p.unresolved_issues|length}}</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">chocolate cheesecake candy</li>
-                                <li class="list-group-item">Oat cake icing pastry pie carrot</li>
-                            </ul>
-                        </div>
-                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -268,36 +212,20 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h4>Recent Messages</h4>
+                    <h4>Solvers</h4>
                 </div>
                 <div class="card-content pb-4">
+                    {% for p in people_active %}
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="assets/images/faces/4.jpg">
+                            <img src="{% static 'assets/images/faces/4.jpg' %}">
                         </div>
                         <div class="name ms-4">
-                            <h5 class="mb-1">Hank Schrader</h5>
-                            <h6 class="text-muted mb-0">@johnducky</h6>
+                            <h5 class="mb-1">{{ p.user.username }}</h5>
+                            <h6 class="text-muted mb-0">@{{ p.user.username }}</h6>
                         </div>
                     </div>
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="assets/images/faces/5.jpg">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">Dean Winchester</h5>
-                            <h6 class="text-muted mb-0">@imdean</h6>
-                        </div>
-                    </div>
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="assets/images/faces/1.jpg">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">John Dodol</h5>
-                            <h6 class="text-muted mb-0">@dodoljohn</h6>
-                        </div>
-                    </div>
+                    {% endfor %}
                     <div class="px-4">
                         <button class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>Start
                             Conversation</button>
