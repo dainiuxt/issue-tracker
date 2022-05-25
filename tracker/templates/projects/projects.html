@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% block title %} Projects {% endblock %}
 {% load static %}
 {% block content %}
-{% block title %} Dashboard {% endblock %}
 <div class="page-heading">
-    <h3>Issue tracker dashboard</h3>
+    <h3>Projects dashboard</h3>
 </div>
 <div class="page-content">
     <section class="row">
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Active solvers</h6>
-                                    <h6 class="font-extrabold mb-0"> {{ people_active|length }}</h6>
+                                    <h6 class="font-extrabold mb-0"> {{ people|length }}</h6>
                                 </div>
                             </div>
                         </div>
