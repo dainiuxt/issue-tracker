@@ -29,6 +29,13 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item  {% if issues_menu_active %} active {% endif %}">
+                    <a href="{% url 'issues' %}" class='sidebar-link'>
+                        <i class="bi bi-pen-fill"></i>
+                        <span>Issues</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-item  ">
                     <a href="{% url 'people' %}" class='sidebar-link'>
                         <i class="bi bi-person-badge-fill"></i>

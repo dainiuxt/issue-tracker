@@ -83,6 +83,31 @@ class ProjectsView(LoginRequiredMixin, ListView):
         return context
 
 
+class IssuesView(LoginRequiredMixin, ListView):
+    model = Issue
+    template_name = 'issues/issues.html'
+
+    def get_context_data(self, **kwargs):
+
+        issues_data = pd.DataFrame()
+        for i in issues_active:
+            row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
+            issues_data = pd.concat([row,issues_data.loc[:]]).reset_index(drop=True)        
+        issues_graphs = []
+        issues_graphs.append(
+            go.Pie(values=issues_data['Item'], labels=issues_data['Priority'])
+        )
+        # Getting HTML needed to render the plot.
+        plot_div = plot({'data': issues_graphs}, output_type='div')
+
+        context = super(IssuesView, self).get_context_data(**kwargs)
+        context['issues_menu_active'] = 'active'
+        context['issues'] = issues
+        context['issues_active'] = issues_active
+        context['issues_solved'] = issues_solved
+        context['plot_div'] = plot_div
+        return context
+
 
 
 @login_required
