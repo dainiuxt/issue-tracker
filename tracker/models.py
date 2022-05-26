@@ -84,7 +84,7 @@ class Issue(SoftDeleteModel):
   identified_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='troubleshooter')
   identification_date = models.DateField('Identified on', auto_now_add=True)
   related_project = models.ForeignKey(Project, on_delete=models.PROTECT, null=True)
-  assigned_to = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='issue_solver', blank=True)
+  assigned_to = models.ForeignKey(People, on_delete=models.PROTECT, null=True, related_name='issue_solver', blank=True)
 
   PIORITY_LIST = (
     ('l', 'Low'),
