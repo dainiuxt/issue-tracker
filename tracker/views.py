@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (ListView)
 from .models import People, Project, Issue, SoftDeleteQuerySet
+from django.contrib.auth.mixins import LoginRequiredMixin
 from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
@@ -51,7 +52,21 @@ class IndexView(ListView):
         context['issues_solved'] = issues_solved
         context['issues_plot_div'] = issues_plot_div
         context['projects_plot_div'] = projects_plot_div
+        context['index_menu_active'] = 'active'
         return context
+
+class ProjectsView(LoginRequiredMixin, ListView):
+    model = Project
+    template_name = 'projects/projects.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectsView, self).get_context_data(**kwargs)
+
+        context['projects_menu_active'] = 'active'
+        return context
+
+
+
 
 @login_required
 def people(request):

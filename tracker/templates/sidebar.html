@@ -15,10 +15,17 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
                 <!-- Single menu item -->
-                <li class="sidebar-item  ">
+                <li class="sidebar-item  {% if index_menu_active %} active {% endif %}">
                     <a href="{% url 'index' %}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item  {% if projects_menu_active %} active {% endif %}">
+                    <a href="{% url 'projects' %}" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Projects</span>
                     </a>
                 </li>
 
