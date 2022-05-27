@@ -18,25 +18,42 @@ for i in issues:
     if i.actual_resolution != None:
         issues_solved.append(i)
 
-data = [len(issues_active), len(issues_solved)]
-labels = ['Open', 'Solved']
-issues_graphs = []
-issues_graphs.append(
-    go.Pie(values=data, labels=labels)
-)
-# Getting HTML needed to render the plot.
-issues_status_div = plot({'data': issues_graphs}, output_type='div')
+def issues_chart_main():
+    data = [len(issues_active), len(issues_solved)]
+    labels = ['Open', 'Solved']
+    issues_graphs = []
+    issues_graphs.append(
+        go.Pie(values=data, labels=labels)
+    )
+    # Getting HTML needed to render the plot.
+    div = plot({'data': issues_graphs}, output_type='div')
+    return div
 
-projects_data = pd.DataFrame()
-for i in issues:
-    row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.priority, 'Item': 1}, index=[0])
-    projects_data = pd.concat([row,projects_data.loc[:]]).reset_index(drop=True)        
-projects_graphs = []
-projects_graphs.append(
-    go.Pie(values=projects_data['Item'], labels=projects_data['Project'])
-)
-# Getting HTML needed to render the plot.
-projects_plot_div = plot({'data': projects_graphs}, output_type='div')
+def issues_chart(data, labels):
+    issues_data = pd.DataFrame()
+    for i in issues_active:
+        row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
+        issues_data = pd.concat([row,issues_data.loc[:]]).reset_index(drop=True)          
+    projects_graphs = []
+    projects_graphs.append(
+        go.Pie(values=issues_data[data], labels=issues_data[labels])
+    )
+    # Getting HTML needed to render the plot.
+    div = plot({'data': projects_graphs}, output_type='div')
+    return div
+
+def projects_chart(data, labels):
+    projects_data = pd.DataFrame()
+    for i in issues:
+        row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.priority, 'Item': 1}, index=[0])
+        projects_data = pd.concat([row,projects_data.loc[:]]).reset_index(drop=True)        
+    projects_graphs = []
+    projects_graphs.append(
+        go.Pie(values=projects_data[data], labels=projects_data[labels])
+    )
+    # Getting HTML needed to render the plot.
+    div = plot({'data': projects_graphs}, output_type='div')
+    return div
 
 class IndexView(ListView):
     model = Project
@@ -44,7 +61,8 @@ class IndexView(ListView):
     queryset = Project.objects.all()
 
     def get_context_data(self, **kwargs):
-
+        issues_status_div = issues_chart_main()
+        projects_plot_div = projects_chart('Item', 'Project')
         context = super(IndexView, self).get_context_data(**kwargs)
         context['projects'] = projects
         context['people'] = people
@@ -62,18 +80,7 @@ class ProjectsView(LoginRequiredMixin, ListView):
     template_name = 'projects/projects.html'
 
     def get_context_data(self, **kwargs):
-
-        projects_data = pd.DataFrame()
-        for i in issues_active:
-            row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
-            projects_data = pd.concat([row,projects_data.loc[:]]).reset_index(drop=True)        
-        projects_graphs = []
-        projects_graphs.append(
-            go.Pie(values=projects_data['Item'], labels=projects_data['Priority'])
-        )
-        # Getting HTML needed to render the plot.
-        plot_div = plot({'data': projects_graphs}, output_type='div')
-
+        plot_div = projects_chart('Item', 'Priority')
         context = super(ProjectsView, self).get_context_data(**kwargs)
         context['projects_menu_active'] = 'active'
         context['projects'] = projects
@@ -89,25 +96,8 @@ class IssuesView(LoginRequiredMixin, ListView):
     template_name = 'issues/issues.html'
 
     def get_context_data(self, **kwargs):
-
-        issues_data = pd.DataFrame()
-        for i in issues_active:
-            row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
-            issues_data = pd.concat([row,issues_data.loc[:]]).reset_index(drop=True)        
-        issues_graphs = []
-        issues_graphs.append(
-            go.Pie(values=issues_data['Item'], labels=issues_data['Priority'])
-        )
-        # Getting HTML needed to render the plot.
-        plot_div = plot({'data': issues_graphs}, output_type='div')
-
-        issues_by_project = []
-        issues_by_project.append(
-            go.Pie(values=issues_data['Item'], labels=issues_data['Project'])
-        )
-        # Getting HTML needed to render the plot.
-        issues_by_proj_div = plot({'data': issues_by_project}, output_type='div')
-
+        plot_div = issues_chart_main()
+        issues_by_proj_div = issues_chart('Item', 'Project')
         context = super(IssuesView, self).get_context_data(**kwargs)
         context['issues_menu_active'] = 'active'
         context['issues'] = issues
@@ -124,17 +114,9 @@ class ProfileView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
 
-        people = People.objects.all()
-        # user = People.objects.all().filter(pk=request.user.id)
         projects = Project.objects.all().filter(assigned_to=self.request.user.id)
-        people_active = People.objects.only_active()
-        issues = Issue.objects.all()
-        issues_active = Issue.objects.all().filter(actual_resolution=None)
-        issues_solved = []
-        for i in issues:
-            if i.actual_resolution != None:
-                issues_solved.append(i)
-
+        issues_status_div = issues_chart('Item', 'Priority')
+        projects_plot_div = projects_chart('Item', 'Project')
         context = super(ProfileView, self).get_context_data(**kwargs)
         context['projects'] = projects
         context['people'] = people
