@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 <div class="page-heading">
-    <h3>Projects dashboard</h3>
+    <h3>Issues dashboard</h3>
 </div>
 <div class="page-content">
     <section class="row">
@@ -17,9 +17,9 @@
                         <div class="card-body">
                             {% if issues %}
                                 <ul class="list-group">
-                                    <li class="list-group-item active">Issues list</li>
+                                    <li class="list-group-item active">Issues list ({{issues_active|length}} unresolved)</li>
                                         {% for i in issues %}
-                                            <li class="list-group-item">{{ i.summary }}, status {{ i.get_priority_display }}</li>
+                                            <li class="list-group-item {% if i.actual_resolution is None %} bg-warning {% else %} text-light bg-success {% endif %}">{{ i.summary }}, status {{ i.get_priority_display }}. {% if i.actual_resolution is None %} OPEN {% endif %}</li>
                                         {% endfor %}
                                 </ul>
                             {% endif %}
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6 ">
+                <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h4>Unresolved issues by priority</h4>
@@ -40,14 +40,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Unresolved issues by priority</h4>
+                            <h4>Unresolved issues by project</h4>
                         </div>
                         <div class="card-body px-3 py-4-5">
                             {% autoescape off %}
-                                {{ plot_div }}
+                                {{ issues_by_proj_div }}
                             {% endautoescape %}
                         </div>
                     </div>
