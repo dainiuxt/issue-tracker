@@ -1,9 +1,7 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, reverse
 from django.views.generic import (ListView, DetailView)
 from .models import People, Project, Issue
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import request
 from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
@@ -30,8 +28,9 @@ def issues_chart_main():
     return div
 
 def issues_chart(data, labels):
+    issues_act = issues_active
     issues_data = pd.DataFrame()
-    for i in issues_active:
+    for i in issues_act:
         row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
         issues_data = pd.concat([row,issues_data.loc[:]]).reset_index(drop=True)          
     projects_graphs = []
@@ -45,7 +44,7 @@ def issues_chart(data, labels):
 def projects_chart(data, labels):
     projects_data = pd.DataFrame()
     for i in issues:
-        row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.priority, 'Item': 1}, index=[0])
+        row = pd.DataFrame({'Project': i.related_project.project_name, 'Solver': i.assigned_to, 'Priority': i.get_priority_display(), 'Item': 1}, index=[0])
         projects_data = pd.concat([row,projects_data.loc[:]]).reset_index(drop=True)        
     projects_graphs = []
     projects_graphs.append(
@@ -90,19 +89,36 @@ class ProjectsView(LoginRequiredMixin, ListView):
         context['plot_div'] = plot_div
         return context
 
+class ProjectView(LoginRequiredMixin, DetailView):
+    model = Project
+    template_name = 'projects/project.html'
+
+    def get_success_url(self):
+        return reverse('order-detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        plot_div = projects_chart('Item', 'Priority')
+        context = super(ProjectView, self).get_context_data(**kwargs)
+        context['projects_menu_active'] = 'active'
+        context['projects'] = projects
+        context['issues'] = issues
+        context['issues_active'] = issues_active
+        context['issues_solved'] = issues_solved
+        return context
 
 class IssuesView(LoginRequiredMixin, ListView):
     model = Issue
     template_name = 'issues/issues.html'
 
     def get_context_data(self, **kwargs):
-        plot_div = issues_chart_main()
+        plot_div = issues_chart('Item', 'Priority')
         issues_by_proj_div = issues_chart('Item', 'Project')
         context = super(IssuesView, self).get_context_data(**kwargs)
         context['issues_menu_active'] = 'active'
         context['issues'] = issues
         context['issues_active'] = issues_active
         context['issues_solved'] = issues_solved
+        context['projects'] = projects
         context['plot_div'] = plot_div
         context['issues_by_proj_div'] = issues_by_proj_div
         return context
@@ -116,7 +132,7 @@ class ProfileView(ListView, LoginRequiredMixin):
 
         projects = Project.objects.all().filter(assigned_to=self.request.user.id)
         issues_status_div = issues_chart('Item', 'Priority')
-        projects_plot_div = projects_chart('Item', 'Project')
+        projects_plot_div = projects_chart('Item', 'Priority')
         context = super(ProfileView, self).get_context_data(**kwargs)
         context['projects'] = projects
         context['people'] = people
