@@ -33,6 +33,7 @@ LOGIN_REDIRECT_URL = '/'
 
 INSTALLED_APPS = [
     'tracker.apps.TrackerConfig',
+    'crispy_forms',
     # 'simple_history',
     'django.contrib.admin',
     'django.contrib.auth',

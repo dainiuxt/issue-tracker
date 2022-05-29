@@ -1,10 +1,15 @@
 from django.shortcuts import render, reverse
-from django.views.generic import (ListView, DetailView)
+from django.views.generic import (ListView,
+                                DetailView,
+                                CreateView)
 from .models import People, Project, Issue
+from .forms import ProjectCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import date
+from django.urls import reverse_lazy
 
 projects = Project.objects.all()
 people = People.objects.all()
@@ -104,6 +109,22 @@ class ProjectView(LoginRequiredMixin, DetailView):
         context['issues'] = issues
         context['issues_active'] = issues_active
         context['issues_solved'] = issues_solved
+        return context
+
+class ProjectCreateView(LoginRequiredMixin, CreateView):
+    model = Project
+    form_class = ProjectCreateForm
+
+    success_url = reverse_lazy('index')
+    template_name = 'projects/new_project.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.date = date.today()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         return context
 
 class IssuesView(LoginRequiredMixin, ListView):
