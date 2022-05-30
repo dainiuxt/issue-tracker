@@ -111,7 +111,7 @@ class ProjectView(LoginRequiredMixin, DetailView):
     template_name = 'projects/project.html'
 
     def get_success_url(self):
-        return reverse('order-detail', kwargs={'pk': self.object.id})
+        return reverse('project', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
         context = super(ProjectView, self).get_context_data(**kwargs)
@@ -162,6 +162,18 @@ class IssuesView(LoginRequiredMixin, ListView):
         context['issues_by_proj_div'] = issues_by_proj_div
         return context
 
+
+class IssueView(LoginRequiredMixin, DetailView):
+    model = Issue
+    template_name = 'issues/issue.html'
+
+    def get_success_url(self):
+        return reverse('issue', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(IssueView, self).get_context_data(**kwargs)
+        return context
+
 class IssueCreateView(LoginRequiredMixin, CreateView):
     model = Issue
     form_class = IssueCreateForm
@@ -187,16 +199,12 @@ class IssueUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        # form.instance.date = date.today()
         return super().form_valid(form)
 
     def test_func(self):
         issue = self.get_object()
         return self.request.user == issue.created_by
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
 
 class ProfileView(ListView, LoginRequiredMixin):
     model = People
