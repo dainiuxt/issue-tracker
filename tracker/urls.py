@@ -5,6 +5,7 @@ from tracker.views import (IndexView,
                             ProjectView,
                             ProjectCreateView,
                             IssuesView,
+                            IssueCreateView,
                             ProfileView)
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path('projects/new', ProjectCreateView.as_view(), name='new-project'),
     path('projects/<int:pk>/', ProjectView.as_view(), name='project'),
     path('issues/', IssuesView.as_view(), name='issues'),
+    path('issues/new', IssueCreateView.as_view(), name='new-issue'),
 ]

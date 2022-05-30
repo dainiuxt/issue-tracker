@@ -20,3 +20,26 @@ class ProjectCreateForm(forms.ModelForm):
             'created_on': forms.HiddenInput(),
             'created_by': forms.HiddenInput()
         }
+
+class IssueCreateForm(forms.ModelForm):
+    class Meta:
+        model = Issue
+        fields = [
+            'summary',
+            'description',
+            'identified_by',
+            # 'identification_date',
+            'related_project',
+            'assigned_to',
+            'priority',
+            'target_resolution',
+            'progress',
+            'actual_resolution',
+            'res_summary']
+        widgets = {
+            # 'identification_date': DateInput(),
+            'target_resolution': DateInput(),
+            'actual_resolution': DateInput(),
+            'created_on': forms.HiddenInput(),
+            'created_by': forms.HiddenInput()
+        }

@@ -3,7 +3,7 @@ from django.views.generic import (ListView,
                                 DetailView,
                                 CreateView)
 from .models import People, Project, Issue
-from .forms import ProjectCreateForm
+from .forms import ProjectCreateForm, IssueCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -142,6 +142,22 @@ class IssuesView(LoginRequiredMixin, ListView):
         context['projects'] = projects
         context['plot_div'] = plot_div
         context['issues_by_proj_div'] = issues_by_proj_div
+        return context
+
+class IssueCreateView(LoginRequiredMixin, CreateView):
+    model = Issue
+    form_class = IssueCreateForm
+
+    success_url = reverse_lazy('index')
+    template_name = 'issues/new_issue.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        # form.instance.date = date.today()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         return context
 
 class ProfileView(ListView, LoginRequiredMixin):
