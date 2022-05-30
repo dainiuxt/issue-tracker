@@ -1,10 +1,12 @@
 from django.shortcuts import render, reverse
 from django.views.generic import (ListView,
                                 DetailView,
-                                CreateView)
+                                CreateView,
+                                UpdateView,
+                                DeleteView)
 from .models import People, Project, Issue
 from .forms import ProjectCreateForm, IssueCreateForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
@@ -65,6 +67,16 @@ class IndexView(ListView):
     queryset = Project.objects.all()
 
     def get_context_data(self, **kwargs):
+        projects = Project.objects.all()
+        people = People.objects.all()
+        people_active = People.objects.only_active()
+        issues = Issue.objects.all()
+        issues_active = Issue.objects.all().filter(actual_resolution=None)
+        issues_solved = []
+        for i in issues:
+            if i.actual_resolution != None:
+                issues_solved.append(i)
+
         issues_status_div = issues_chart_main()
         projects_plot_div = projects_chart('Item', 'Project')
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -102,7 +114,6 @@ class ProjectView(LoginRequiredMixin, DetailView):
         return reverse('order-detail', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
-        plot_div = projects_chart('Item', 'Priority')
         context = super(ProjectView, self).get_context_data(**kwargs)
         context['projects_menu_active'] = 'active'
         context['projects'] = projects
@@ -132,6 +143,13 @@ class IssuesView(LoginRequiredMixin, ListView):
     template_name = 'issues/issues.html'
 
     def get_context_data(self, **kwargs):
+        projects = Project.objects.all()
+        issues = Issue.objects.all()
+        issues_active = Issue.objects.all().filter(actual_resolution=None)
+        issues_solved = []
+        for i in issues:
+            if i.actual_resolution != None:
+                issues_solved.append(i)
         plot_div = issues_chart('Item', 'Priority')
         issues_by_proj_div = issues_chart('Item', 'Project')
         context = super(IssuesView, self).get_context_data(**kwargs)
@@ -159,6 +177,26 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+class IssueUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Issue
+    form_class = IssueCreateForm
+
+    success_url = reverse_lazy('index')
+    template_name = 'issues/new_issue.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        # form.instance.date = date.today()
+        return super().form_valid(form)
+
+    def test_func(self):
+        issue = self.get_object()
+        return self.request.user == issue.created_by
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 class ProfileView(ListView, LoginRequiredMixin):
     model = People
