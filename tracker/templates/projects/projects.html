@@ -8,6 +8,7 @@
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-9">
+            {% include 'top_menu.html' %}
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -19,7 +20,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item active">Projects total: {{projects|length}}</li>
                                         {% for p in projects %}
-                                            <li class="list-group-item">{{ p.project_name }} has {{p.pr_issues|length}} issues total, {{p.unresolved_issues|length}} of which are UNRESOLVED.</li>
+                                            <li class="list-group-item"><a href="{% url 'projects' %}{{p.id}}">{{ p.project_name }}</a> has {{p.pr_issues|length}} issues total, {{p.unresolved_issues|length}} of which are UNRESOLVED.</li>
                                         {% endfor %}
                                 </ul>
                             {% endif %}

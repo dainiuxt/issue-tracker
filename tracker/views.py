@@ -1,3 +1,4 @@
+from distutils.log import error
 from django.shortcuts import render, reverse
 from django.views.generic import (ListView,
                                 DetailView,
@@ -7,11 +8,15 @@ from django.views.generic import (ListView,
 from .models import People, Project, Issue
 from .forms import ProjectCreateForm, IssueCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import date
 from django.urls import reverse_lazy
+
+def custom_error_403(request, exception):
+    return render(request, 'err/403.html', {})
 
 projects = Project.objects.all()
 people = People.objects.all()
@@ -205,12 +210,16 @@ class IssueUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'issues/new_issue.html'
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        # if form.instance.created_by != self.request.user or form.instance.assigned_to != self.request.user:
+        #     messages.error(self.request)
+        # form.instance.created_by = self.request.user
+        form.instance.assigned_to = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
         issue = self.get_object()
-        return self.request.user == issue.created_by
+        if self.request.user == issue.created_by or self.request.user == issue.assigned_to:
+            return True #self.request.user == issue.created_by
 
 
 class ProfileView(ListView, LoginRequiredMixin):

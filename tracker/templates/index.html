@@ -8,61 +8,9 @@
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-9">
+            {% include 'top_menu.html' %}
             <div class="row">
-                <div class="col-12 col-lg-4 col-md-6">
-                    <div class="card">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon purple">
-                                        <i class="iconly-boldShow"></i>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total projects</h6>
-                                    <h6 class="font-extrabold mb-0"> {{ projects|length }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4 col-md-6">
-                    <div class="card">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon red">
-                                        <i class="iconly-boldBookmark"></i>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total issues (solved)</h6>
-                                    <h6 class="font-extrabold mb-0"> {{ issues|length }} ({{ issues_solved|length }})</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4 col-md-6">
-                    <div class="card">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon green">
-                                        <i class="iconly-boldAdd-User"></i>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Active solvers</h6>
-                                    <h6 class="font-extrabold mb-0"> {{ people_active|length }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-lg-6">
                     <div class="card">
                         <div class="card-header">
                             <h4>Issues stats</h4>
@@ -73,6 +21,8 @@
                             {% endautoescape %}
                         </div>
                     </div>
+                </div>
+                <div class="col-12 col-lg-6">
                     <div class="card">
                         <div class="card-header">
                             <h4>Project stats</h4>
@@ -97,7 +47,7 @@
                                     <li class="list-group-item active">Active issues: {{p.unresolved_issues|length}}</li>
                                     {% if p.unresolved_issues %}
                                         {% for i in p.unresolved_issues %}
-                                            <li class="list-group-item"><a href="{% url 'issues' %}{{i.id}}">{{ i.summary }}</a></li>
+                                            <li class="list-group-item"><a href="{% url 'issues' %}{{i.id}}">{{ i.summary }}</a> <a href="{% url 'issues' %}{{i.id}}/edit" class="btn-sm btn-dark rounded-pill">Edit</a></li>
                                         {% endfor %}
                                     {% endif %}
                                 </ul>

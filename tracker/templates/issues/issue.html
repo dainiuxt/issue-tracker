@@ -4,15 +4,17 @@
 {% block content %}
 <div class="page-heading">
     <h3>{{issue.summary}}</h3>
+    Project: <a href="{% url 'projects' %}{{issue.related_project.id}}">{{issue.related_project}}</a>
 </div>
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-9">
+            {% include 'top_menu.html' %}
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header {% if issue.resolved %} bg-success bg-gradient{% endif %}">
-                            <h4>{{ issue.summary }} {% if issue.resolved %} (RESOLVED) {% endif %}</h4>
+                        <div class="card-header {% if issue.resolved %} bg-success {% else %} bg-warning {% endif %} bg-gradient">
+                            <h4>{{ issue.summary }} {% if issue.resolved %} (RESOLVED) {% endif %} <a href="{% url 'issues' %}{{issue.id}}/edit" class="btn-sm btn-dark rounded-pill">Edit</a></h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">

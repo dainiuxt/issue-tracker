@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf.urls import handler403
 
 urlpatterns = [
     path('', lambda req: redirect('/tracker/')),
@@ -23,3 +24,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('tracker/', include('tracker.urls')),
 ]
+
+handler403 = 'tracker.views.custom_error_403'

@@ -1,32 +1,23 @@
 {% extends "base.html" %}
-{% block title %} New issue {% endblock %}
-{% load crispy_forms_tags %}
+{% block title %} Forbidden 403 {% endblock %}
 {% load static %}
 {% block content %}
 <div class="page-heading">
-    <h3>Create/edit issue</h3>
+    <h3>{{request.user.username}}, error 403</h3>
 </div>
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-9">
+            {% include 'top_menu.html' %}
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Issues outline</h4>
+                            <h4>You shall not pass!</h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <fieldset class="form-group">
-                                    <legend class="border-bottom mb-4">{% if issue %} Edit {% else %} New {% endif %} issue</legend>
-                                    {{ form|crispy }}
-                                </fieldset>
-                                <div class="form-group">
-                                    <button class="btn btn-info" type="submit">Submit</button>
-                                    <a class="btn btn-warning" href="{{request.META.HTTP_REFERER|escape}}">Go back</a>
-                                </div>
-                            </form>
+                            You can only edit items you have created. <br>
+                            <a href="{{request.META.HTTP_REFERER|escape}}">Go back</a>
                         </div>
                     </div>
                 </div>

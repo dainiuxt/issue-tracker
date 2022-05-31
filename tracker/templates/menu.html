@@ -28,9 +28,6 @@
                         <span>Projects</span>
                     </a>
                     <ul class="submenu {% if projects_menu_active %} active {% endif %}">
-                        <li class="submenu-item ">
-                            <a href="{% url 'projects' %}">Projects dashboard</a>
-                        </li>
                         {% for project in projects %}
                             <li class="submenu-item ">
                                 <a href="{% url 'projects' %}{{project.id}}">{{project.project_name}}</a>
