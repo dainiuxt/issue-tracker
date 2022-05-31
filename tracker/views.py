@@ -114,6 +114,13 @@ class ProjectView(LoginRequiredMixin, DetailView):
         return reverse('project', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
+        projects = Project.objects.all()
+        issues = Issue.objects.all()
+        issues_active = Issue.objects.all().filter(actual_resolution=None)
+        issues_solved = []
+        for i in issues:
+            if i.actual_resolution != None:
+                issues_solved.append(i)
         context = super(ProjectView, self).get_context_data(**kwargs)
         context['projects_menu_active'] = 'active'
         context['projects'] = projects
