@@ -108,5 +108,11 @@ class Issue(SoftDeleteModel):
     else:
       return True
 
+  # def save(self, request, *args, **kwargs):
+  #   if self.created_by == request.user or self.assigned_to == request.user:
+  #     super().save(*args, **kwargs)
+  #   else:
+  #     return print("Only creator o user for whom isse is assigned can edit.")
+
   def __str__(self):
     return f"{self.summary}"

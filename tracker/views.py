@@ -7,7 +7,8 @@ from django.views.generic import (ListView,
                                 DeleteView)
 from .models import People, Project, Issue
 from .forms import ProjectCreateForm, IssueCreateForm
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        UserPassesTestMixin)
 from django.contrib import messages
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -195,14 +196,15 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        # form.instance.date = date.today()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
-class IssueUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class IssueUpdateView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    UpdateView):
     model = Issue
     form_class = IssueCreateForm
 
@@ -210,16 +212,12 @@ class IssueUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'issues/new_issue.html'
 
     def form_valid(self, form):
-        # if form.instance.created_by != self.request.user or form.instance.assigned_to != self.request.user:
-        #     messages.error(self.request)
-        # form.instance.created_by = self.request.user
-        form.instance.assigned_to = self.request.user
+        form.instance.created_by = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
         issue = self.get_object()
-        if self.request.user == issue.created_by or self.request.user == issue.assigned_to:
-            return True #self.request.user == issue.created_by
+        return self.request.user == issue.created_by
 
 
 class ProfileView(ListView, LoginRequiredMixin):
