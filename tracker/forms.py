@@ -25,12 +25,12 @@ class IssueCreateForm(forms.ModelForm):
     class Meta:
         model = Issue
         fields = [
+            'identified_by',
+            'assigned_to',
             'summary',
             'description',
-            'identified_by',
             # 'identification_date',
             'related_project',
-            'assigned_to',
             'priority',
             'target_resolution',
             'progress',

@@ -20,7 +20,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item active">Issues list ({{issues_active|length}} unresolved)</li>
                                         {% for i in issues %}
-                                            <li class="list-group-item {% if i.actual_resolution is None %} bg-warning {% else %} text-light bg-success {% endif %}">{{ i.summary }}, status {{ i.get_priority_display }}. {% if i.actual_resolution is None %} OPEN {% endif %} <a href="{% url 'issues' %}{{i.id}}/edit" class="btn-sm btn-dark rounded-pill">Edit</a></li>
+                                            <li class="list-group-item {% if i.actual_resolution is None %} bg-warning {% else %} text-light bg-success {% endif %}"><a class="{% if i.resolved %} text-light {% endif %}" href="{% url 'issues' %}{{i.id}}">{{ i.summary }}, {{ i.get_priority_display }} priority. {% if i.actual_resolution is None %} OPEN {% endif %}</a> <a href="{% url 'issues' %}{{i.id}}/edit" class="btn-sm btn-dark rounded-pill">Edit</a></li>
                                         {% endfor %}
                                 </ul>
                             {% endif %}

@@ -16,6 +16,7 @@ import pandas as pd
 from datetime import date
 from django.urls import reverse_lazy
 
+
 def custom_error_403(request, exception):
     return render(request, 'err/403.html', {})
 
@@ -202,12 +203,12 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         return context
 
-class IssueUpdateView(LoginRequiredMixin,
-                    UserPassesTestMixin,
+class IssueUpdateView(UserPassesTestMixin,
+                    LoginRequiredMixin,
                     UpdateView):
     model = Issue
     form_class = IssueCreateForm
-
+    
     success_url = reverse_lazy('index')
     template_name = 'issues/new_issue.html'
 
@@ -217,7 +218,9 @@ class IssueUpdateView(LoginRequiredMixin,
 
     def test_func(self):
         issue = self.get_object()
-        return self.request.user == issue.created_by
+        if self.request.user == issue.assigned_to or self.request.user == issue.created_by:
+            return True
+        return False
 
 
 class ProfileView(ListView, LoginRequiredMixin):
