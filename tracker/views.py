@@ -213,7 +213,7 @@ class IssueUpdateView(UserPassesTestMixin,
     template_name = 'issues/new_issue.html'
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        # form.instance.created_by = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
