@@ -4,7 +4,7 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo/mylogo.png' %}" alt="Logo" srcset=""></a>
+                    <a href="{% url 'index' %}"><img class="w-100 h-100" src="{% static 'assets/images/logo/it-logo.png' %}" alt="Logo" srcset=""></a>
                 </div>
                 <div class="toggler">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -13,7 +13,6 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-title">Menu</li>
                 <!-- Single menu item -->
                 <li class="sidebar-item  {% if index_menu_active %} active {% endif %}">
                     <a href="{% url 'index' %}" class='sidebar-link'>
