@@ -103,14 +103,10 @@ class ProjectsView(LoginRequiredMixin, ListView):
     template_name = 'projects/projects.html'
 
     def get_context_data(self, **kwargs):
-        plot_div = projects_chart('Item', 'Priority')
         context = super(ProjectsView, self).get_context_data(**kwargs)
         context['projects_menu_active'] = 'active'
         context['projects'] = projects
         context['issues'] = issues
-        context['issues_active'] = issues_active
-        context['issues_solved'] = issues_solved
-        context['plot_div'] = plot_div
         return context
 
 class ProjectView(LoginRequiredMixin, DetailView):

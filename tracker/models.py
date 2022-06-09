@@ -63,7 +63,7 @@ class Project(SoftDeleteModel):
   def unresolved_issues(self):
     issues = Issue.objects.filter(related_project=self.id).filter(actual_resolution=None)
     return issues 
-  
+ 
 
 class People(SoftDeleteModel):
   user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True)
