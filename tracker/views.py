@@ -164,16 +164,12 @@ class IssuesView(LoginRequiredMixin, ListView):
         for i in issues:
             if i.actual_resolution != None:
                 issues_solved.append(i)
-        plot_div = issues_chart('Item', 'Priority')
-        issues_by_proj_div = issues_chart('Item', 'Project')
         context = super(IssuesView, self).get_context_data(**kwargs)
         context['issues_menu_active'] = 'active'
         context['issues'] = issues
         context['issues_active'] = issues_active
         context['issues_solved'] = issues_solved
         context['projects'] = projects
-        context['plot_div'] = plot_div
-        context['issues_by_proj_div'] = issues_by_proj_div
         return context
 
 
@@ -186,6 +182,7 @@ class IssueView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(IssueView, self).get_context_data(**kwargs)
+        context['issues_menu_active'] = 'active'
         return context
 
 class IssueCreateView(LoginRequiredMixin, CreateView):

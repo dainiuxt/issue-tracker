@@ -13,60 +13,55 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header {% if issue.resolved %} bg-success {% else %} bg-warning {% endif %} bg-gradient">
-                            <h4>{{ issue.summary }} {% if issue.resolved %} (RESOLVED) {% endif %} <a href="{% url 'issues' %}{{issue.id}}/edit" class="btn btn-warning ms-2 {% if request.user != issue.assigned_to and request.user != issue.created_by %} d-none {% endif %}">Edit</a></h4>
-                        </div>
                         <div class="card-body">
+                            <div class="list-group">
+                                <div class="list-group-item list-group-item-action mb-3 border border-3 border-warning {% if issue.priority == 'h' %} border-danger {% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ issue.summary }} ({% if issue.actual_resolution is None %}Open{%else %}Resolved{% endif %})</h5>
+                                    </div>
+                                    <p class="mb-1">
+                                        {{ issue.get_priority_display }} priority.
+                                    </p>
+                                </div>
+                            </div>
                             <div class="table-responsive">
-                                <table class="table table-lg">
+                                <table class="table">
                                     <tbody>
                                         <tr>
                                             <td class="text-bold-500">Description</td>
                                             <td class="text-bold-500">{{ issue.description }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="text-bold-500">Identified by</td>
-                                            <td class="text-bold-500">{{ issue.identified_by }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Identification date</td>
-                                            <td class="text-bold-500">{{ issue.identification_date }}</td>
-                                        </tr>
-                                        <tr>
                                             <td class="text-bold-500">Related project</td>
-                                            <td class="text-bold-500">{{ issue.related_project }}</td>
+                                            <td class="text-bold-500"><a href="{% url 'projects' %}{{issue.related_project.id}}">{{ issue.related_project }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold-500">Identified by</td>
+                                            <td class="text-bold-500">{{ issue.identified_by|capfirst }} on {{ issue.identification_date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold-500">Created by</td>
+                                            <td class="text-bold-500">{{ issue.created_by|capfirst }} on {{ issue.created_on }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-bold-500">Assigned to</td>
-                                            <td class="text-bold-500">{{ issue.assigned_to }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Priority</td>
-                                            <td class="text-bold-500">{{ issue.get_priority_display }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Planned resolution</td>
-                                            <td class="text-bold-500">{{ issue.target_resolution }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Progress</td>
-                                            <td class="text-bold-500">{{ issue.progress }}</td>
+                                            <td class="text-bold-500"><strong>{{ issue.assigned_to|capfirst }}, deadline on {{ issue.target_resolution }}</strong></td>
                                         </tr>
                                         <tr>
                                             <td class="text-bold-500">Resolved on</td>
                                             <td class="text-bold-500">{{ issue.actual_resolution }}</td>
                                         </tr>
                                         <tr>
+                                            <td class="text-bold-500">Priority</td>
+                                            <td class="text-bold-500">{{ issue.get_priority_display }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold-500">Progress</td>
+                                            <td class="text-bold-500">{{ issue.progress }}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="text-bold-500">Resolution summary</td>
                                             <td class="text-bold-500">{{ issue.res_summary }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Created on</td>
-                                            <td class="text-bold-500">{{ issue.created_on }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-bold-500">Created by</td>
-                                            <td class="text-bold-500">{{ issue.created_by }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -13,12 +13,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Issues outline ({{issues_active|length}} unresolved)</h4>
+                            <h4>Total issues: {{ issues|length }} / Unresolved: {{issues_active|length}}</h4>
                         </div>
                         <div class="card-body">
                             <div class="card">
                                 <div class="card-body">
-                                    <table class="table table-striped" id="table1">
+                                    <table class="table table-hover" id="table1">
                                         <thead>
                                             <tr>
                                                 <th>Asigned to</th>
@@ -42,32 +42,6 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Unresolved issues by priority</h4>
-                        </div>
-                        <div class="card-body px-3 py-4-5">
-                            {% autoescape off %}
-                                {{ plot_div }}
-                            {% endautoescape %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Unresolved issues by project</h4>
-                        </div>
-                        <div class="card-body px-3 py-4-5">
-                            {% autoescape off %}
-                                {{ issues_by_proj_div }}
-                            {% endautoescape %}
                         </div>
                     </div>
                 </div>
