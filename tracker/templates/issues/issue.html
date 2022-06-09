@@ -14,7 +14,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header {% if issue.resolved %} bg-success {% else %} bg-warning {% endif %} bg-gradient">
-                            <h4>{{ issue.summary }} {% if issue.resolved %} (RESOLVED) {% endif %} <a href="{% url 'issues' %}{{issue.id}}/edit" class="btn-sm btn-dark rounded-pill">Edit</a></h4>
+                            <h4>{{ issue.summary }} {% if issue.resolved %} (RESOLVED) {% endif %} <a href="{% url 'issues' %}{{issue.id}}/edit" class="btn btn-warning ms-2 {% if request.user != issue.assigned_to and request.user != issue.created_by %} d-none {% endif %}">Edit</a></h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
