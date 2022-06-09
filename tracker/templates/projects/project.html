@@ -13,8 +13,25 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Project outline</h4>
-                            <a href="{% url 'issues' %}new" class="btn-sm btn-warning">Add new issue</a>
+                            <div class="list-group">
+                                <div class="list-group-item list-group-item-action mb-3 border border-3 border-warning {% if issue.priority == 'h' %} border-danger {% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ project.project_name }}</h5>
+                                        <small><a href="{% url 'issues' %}{{issue.id}}/edit" class="badge bg-success {% if request.user != project.created_by %} d-none {% endif %}">Edit</a></small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong>Responsible for project: {{ project.assigned_to|capfirst }}</strong>
+                                    </p>
+                                    <p class="mb-1">
+                                        Started: {{ project.start_date }} <br> Planned to end: {{ project.target_end }}
+                                    </p>
+                                    <p class="mb-1">
+                                        Project created by {{ project.created_by }} on {{ project.created_on }}
+                                    </p>
+                                </div>
+                            </div>
+                            <h4>Issues</h4>
+                            <a href="newissue" class="btn-sm btn-warning">Add new issue</a>
                         </div>
                         <div class="card-body">
                             <table class="table table-hover" id="table1">

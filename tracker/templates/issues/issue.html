@@ -18,6 +18,7 @@
                                 <div class="list-group-item list-group-item-action mb-3 border border-3 border-warning {% if issue.priority == 'h' %} border-danger {% endif %}">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{ issue.summary }} ({% if issue.actual_resolution is None %}Open{%else %}Resolved{% endif %})</h5>
+                                        <small><a href="{% url 'issues' %}{{issue.id}}/edit" class="badge bg-success {% if request.user != issue.assigned_to and request.user != issue.created_by %} d-none {% endif %}">Edit</a></small>
                                     </div>
                                     <p class="mb-1">
                                         {{ issue.get_priority_display }} priority.

@@ -20,5 +20,5 @@ urlpatterns = [
     path('issues/', IssuesView.as_view(), name='issues'),
     path('issues/<int:pk>/', IssueView.as_view(), name='issue'),
     path('issues/<int:pk>/edit/', IssueUpdateView.as_view(), name='edit-issue'),
-    path('issues/new/', IssueCreateView.as_view(), name='new-issue'),
+    path('projects/<int:pk>/newissue/', IssueCreateView.as_view(), name='new-issue'),
 ]

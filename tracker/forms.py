@@ -30,7 +30,7 @@ class IssueCreateForm(forms.ModelForm):
             'summary',
             'description',
             # 'identification_date',
-            'related_project',
+            # 'related_project',
             'priority',
             'target_resolution',
             'progress',
@@ -41,5 +41,6 @@ class IssueCreateForm(forms.ModelForm):
             'target_resolution': DateInput(),
             'actual_resolution': DateInput(),
             'created_on': forms.HiddenInput(),
-            'created_by': forms.HiddenInput()
+            'created_by': forms.HiddenInput(),
+            'related_project': forms.HiddenInput(),
         }

@@ -190,10 +190,13 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
+        form.instance.related_project = Project.objects.get(pk=self.kwargs.get('pk'))
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
+        project_id = Project.objects.get(pk=self.kwargs.get('pk'))
         context = super().get_context_data(**kwargs)
+        context['project_id'] = project_id
         return context
 
 class IssueUpdateView(UserPassesTestMixin,
