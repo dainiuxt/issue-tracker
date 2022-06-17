@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from datetime import date
 # from simple_history.models import HistoricalRecords
 
 class SoftDeleteQuerySet(models.QuerySet):
@@ -106,6 +107,10 @@ class Issue(SoftDeleteModel):
     if self.actual_resolution is None:
       return False
     else:
+      return True
+
+  def overdue(self):
+    if self.actual_resolution is None and self.target_resolution < date.today():
       return True
 
   # def save(self, request, *args, **kwargs):

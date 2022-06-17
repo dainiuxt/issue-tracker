@@ -29,9 +29,9 @@
                                         <tbody>
                                             {% if issues %}
                                             {% for i in issues %}
-                                                <tr>
+                                                <tr {% if i.overdue %} class ="table-danger" {% endif %}>
                                                     <td>{{ i.assigned_to|capfirst }}</td>
-                                                    <td><a href="{% url 'issues' %}{{i.id}}">{% if i.actual_resolution is None %} <span class="badge bg-danger">Open</span> {% endif %} {{ i.summary }}</a></td>
+                                                    <td><a href="{% url 'issues' %}{{i.id}}">{% if i.actual_resolution is None %} <span class="badge bg-danger">Open</span> {% endif %} {{ i.summary }} {% if i.overdue %} (overdue) {% endif %}</a></td>
                                                     <td>
                                                         <a href="{% url 'issues' %}{{i.id}}/edit" class="badge bg-success {% if request.user != i.assigned_to and request.user != i.created_by %} d-none {% endif %}">Edit</a>
                                                     </td>

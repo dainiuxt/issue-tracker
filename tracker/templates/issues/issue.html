@@ -12,7 +12,7 @@
             {% include 'top_menu.html' %}
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card {% if issue.overdue %} bg-danger {% endif %}">
                         <div class="card-body">
                             <div class="list-group">
                                 <div class="list-group-item list-group-item-action mb-3 border border-3 border-warning {% if issue.priority == 'h' %} border-danger {% endif %}">
@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table {% if issue.overdue %} table-danger {% endif %}">
                                     <tbody>
                                         <tr>
                                             <td class="text-bold-500">Description</td>
