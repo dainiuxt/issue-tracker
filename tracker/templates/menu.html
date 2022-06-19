@@ -43,28 +43,10 @@
                 </li>
 
                 <li class="sidebar-item  {% if people_menu_active %} active {% endif %}">
-                    <a href="{% url 'people' %}" class='sidebar-link'>
+                    <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-badge-fill"></i>
                         <span>People</span>
                     </a>
-                </li>
-                <!-- Item with subitems -->
-                <li class="sidebar-item has-sub ">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
-                        <span>Components</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="{% url 'index' %}">Alert</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="{% url 'index' %}">Badge</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="{% url 'index' %}">Breadcrumb</a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </div>

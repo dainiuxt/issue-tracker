@@ -177,8 +177,12 @@ class IssueView(LoginRequiredMixin, DetailView):
         return reverse('issue', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
+        projects = Project.objects.all()
+        issues = Issue.objects.all()
         context = super(IssueView, self).get_context_data(**kwargs)
         context['issues_menu_active'] = 'active'
+        context['projects'] = projects
+        context['issues'] = issues
         return context
 
 class IssueCreateView(LoginRequiredMixin, CreateView):
