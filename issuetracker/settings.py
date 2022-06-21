@@ -34,7 +34,10 @@ with open('.env') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com',
+                'localhost',
+                '0.0.0.0',
+                '127.0.0.1']
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -45,15 +48,16 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    # 'tracker',
     'tracker.apps.TrackerConfig',
     'crispy_forms',
+    'django.contrib.staticfiles',
     # 'simple_history',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -132,10 +136,24 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = 'tracker/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+# STATIC_ROOT = 'tracker/static'
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# STATICFILES_DIRS = ((os.path.join(BASE_DIR, 'static')), )
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 

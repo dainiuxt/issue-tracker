@@ -11,12 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/iconly/bold.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendors/perfect-scrollbar/perfect-scrollbar.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-icons/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/simple-datatables/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/perfect-scrollbar.css' %}">
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}" type="image/x-icon">
     <script src="{% static 'assets/js/live.js' %}"></script>
+    
 </head>
 
 <body>
@@ -51,10 +52,10 @@
             </footer>
         </div>
     </div>
-    <script src="{% static 'assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
-    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'assets/js/pages/dashboard.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'assets/js/pages/dashboard.js' %}"></script>
     {% block scripts %}{% endblock %}
 
 </body>
