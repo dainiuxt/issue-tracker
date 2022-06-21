@@ -33,11 +33,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com', 'localhost']
 
 LOGIN_REDIRECT_URL = '/'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://dtu-tracker.herokuapp.com'
+]
 
 # Application definition
 
