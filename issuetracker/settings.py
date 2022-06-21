@@ -11,13 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import environ
+# import environ
 import os
 # import django_heroku
 # django_heroku.settings(locals())
-
-env = environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,12 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-j#$wt&&4)6y=j*s90s&*-1#g7^j0a_#7v6%v^yr72iu^ksyltu'
 
-SECRET_KEY = env('SECRET_KEY')
+with open('.env') as f:
+    SECRET_KEY = f.read().strip()
+# SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com', 'localhost', '0.0.0.0']
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -133,8 +132,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = 'tracker/static/'
-
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
