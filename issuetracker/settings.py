@@ -11,15 +11,16 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-# import environ
 import os
-# import django_heroku
-# django_heroku.settings(locals())
+from dotenv import load_dotenv
+load_dotenv()
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # PROJECT_ROOT = Path(__file__).resolve().parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -27,14 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-j#$wt&&4)6y=j*s90s&*-1#g7^j0a_#7v6%v^yr72iu^ksyltu'
 
-with open('.env') as f:
-    SECRET_KEY = f.read().strip()
-# SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com',
+ALLOWED_HOSTS = ['rehacked.link',
+		'djtracker.kurapka.lt',
+                '193.160.119.51',
                 'localhost',
                 '0.0.0.0',
                 '127.0.0.1']
@@ -42,8 +43,19 @@ ALLOWED_HOSTS = ['dtu-tracker.herokuapp.com',
 LOGIN_REDIRECT_URL = '/'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://dtu-tracker.herokuapp.com'
+    'https://193.160.119.51',
+    'https://rehacked.link',
+    'https://djtracker.kurapka.lt'
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# VPS
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
+# localhost
+SECURE_SSL_REDIRECT = False
 
 # Application definition
 
@@ -69,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'issuetracker.urls'
@@ -137,22 +150,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = 'tracker/static/'
-# STATIC_ROOT = 'tracker/static'
+STATIC_URL = '/static/'
+STATIC_ROOT = 'tracker/static'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
-    ]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#if DEBUG:
+#    STATICFILES_DIRS = [
+#        os.path.join(BASE_DIR, 'static')
+#    ]
+#else:
+#    STATICFILES_DIRS = [
+#        os.path.join(BASE_DIR, 'static')
+#    ]
+#    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# STATICFILES_DIRS = ((os.path.join(BASE_DIR, 'static')), )
+STATICFILES_DIRS = ((os.path.join(BASE_DIR, 'static/')), )
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
